@@ -80,42 +80,6 @@ export function GameCanvas() {
     ctx.fillStyle = shine;
     ctx.fill();
 
-    // Accessibility pattern overlay for warm-value tiers (helps color-blind readability).
-    if (!isObstacle) {
-      const patternStrength =
-        value === 16 ? 1 :
-        value === 32 ? 2 :
-        value === 64 ? 2 :
-        value === 1024 ? 1 :
-        value >= 2048 ? 2 : 0;
-      if (patternStrength > 0) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(x - size / 2 + 1, y - size / 2 + 1, size - 2, size - 2, r - 1);
-        ctx.clip();
-
-        const spacing = Math.max(7, 11 - patternStrength * 2);
-        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-        ctx.lineWidth = 1;
-        for (let offset = -size; offset <= size; offset += spacing) {
-          ctx.beginPath();
-          ctx.moveTo(x - size / 2 + offset, y + size / 2);
-          ctx.lineTo(x - size / 2 + offset + size, y - size / 2);
-          ctx.stroke();
-        }
-        if (patternStrength >= 2) {
-          ctx.strokeStyle = 'rgba(0,0,0,0.08)';
-          for (let offset = -size; offset <= size; offset += spacing + 2) {
-            ctx.beginPath();
-            ctx.moveTo(x - size / 2 + offset, y - size / 2);
-            ctx.lineTo(x - size / 2 + offset + size, y + size / 2);
-            ctx.stroke();
-          }
-        }
-        ctx.restore();
-      }
-    }
-
     // Number
     if (!isObstacle) {
       const fontSize = value >= 1000 ? 12 : value >= 100 ? 15 : 19;
@@ -206,6 +170,18 @@ export function GameCanvas() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const targetWidth = Math.round(GAME_WIDTH * dpr);
+    const targetHeight = Math.round(GAME_HEIGHT * dpr);
+    if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      canvas.style.width = `${GAME_WIDTH}px`;
+      canvas.style.height = `${GAME_HEIGHT}px`;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
     // Grid background with outer glow
@@ -277,16 +253,21 @@ export function GameCanvas() {
       ctx.fill();
     }
 
+    // Empty cells with extra inset so slots are visually separated.
+    const emptyCellInset = 2;
+    const emptyCellSize = CELL_SIZE - emptyCellInset * 2;
+    const emptyCellRadius = 7;
+
     // Empty cells with gradient fill and borders
     for (let row = 0; row < GRID_ROWS; row++) {
       for (let col = 0; col < GRID_COLS; col++) {
         const pos = gridToPixel(col, row);
-        const cx = pos.x - CELL_SIZE / 2;
-        const cy = pos.y - CELL_SIZE / 2;
+        const cx = pos.x - emptyCellSize / 2;
+        const cy = pos.y - emptyCellSize / 2;
         const isDangerRow = row <= DANGER_LINE_ROW;
 
         // Cell gradient fill
-        const cellGrad = ctx.createLinearGradient(cx, cy, cx, cy + CELL_SIZE);
+        const cellGrad = ctx.createLinearGradient(cx, cy, cx, cy + emptyCellSize);
         if (isDangerRow && dangerActive) {
           const topAlpha = dangerActive ? (0.08 + dangerPulse * 0.1) : 0.08;
           cellGrad.addColorStop(0, `rgba(239,68,68,${topAlpha})`);
@@ -301,13 +282,13 @@ export function GameCanvas() {
           }
         }
         ctx.beginPath();
-        ctx.roundRect(cx, cy, CELL_SIZE, CELL_SIZE, 8);
+        ctx.roundRect(cx, cy, emptyCellSize, emptyCellSize, emptyCellRadius);
         ctx.fillStyle = cellGrad;
         ctx.fill();
 
         // Cell border for depth
         ctx.beginPath();
-        ctx.roundRect(cx, cy, CELL_SIZE, CELL_SIZE, 8);
+        ctx.roundRect(cx, cy, emptyCellSize, emptyCellSize, emptyCellRadius);
         ctx.strokeStyle = isDangerRow && dangerActive
           ? `rgba(254,202,202,${0.14 + dangerPulse * 0.1})`
           : (sparseBoard ? `${theme.colors.accent}2e` : 'rgba(255,255,255,0.05)');

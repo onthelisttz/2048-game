@@ -14,6 +14,7 @@ import { DailyChallengesModal } from './daily-challenges-modal';
 import { LevelCompleteModal } from './level-complete-modal';
 import { getLevelConfig, POWERUPS } from '@/utils/game-data';
 import { showRewardedAd } from '@/utils/ads';
+import { formatCompactNumber, formatNumber } from '@/utils/number-format';
 import {
   Home, Settings, Hammer, Undo2, Gem, Zap, Target, Infinity, ChevronsRight, ArrowRightLeft, PlayCircle
 } from 'lucide-react';
@@ -300,12 +301,12 @@ function GameContent() {
           <div className="flex items-end justify-between">
             <div>
               <p className="text-[11px] uppercase tracking-[0.14em] opacity-60 font-semibold">Score</p>
-              <p className="text-[2.05rem] font-black leading-none tabular-nums drop-shadow-sm">{gameState.score.toLocaleString()}</p>
+              <p className="text-[2.05rem] font-black leading-none tabular-nums drop-shadow-sm">{formatCompactNumber(gameState.score)}</p>
             </div>
             <div className="text-right">
               <p className="text-[11px] uppercase tracking-[0.14em] opacity-60 font-semibold">{gameState.mode === 'level' ? 'Target' : 'Best'}</p>
               <p className="text-[1.7rem] font-extrabold leading-none tabular-nums opacity-95">
-                {gameState.mode === 'level' ? levelConfig.targetScore.toLocaleString() : gameState.bestScore.toLocaleString()}
+                {gameState.mode === 'level' ? formatCompactNumber(levelConfig.targetScore) : formatCompactNumber(gameState.bestScore)}
               </p>
             </div>
           </div>
@@ -355,7 +356,7 @@ function GameContent() {
                 style={{ borderColor: `${theme.colors.accent}88`, backgroundColor: `${theme.colors.accent}28` }}
               >
                 <Gem className="w-3.5 h-3.5" style={{ color: theme.colors.accent }} />
-                <span className="text-sm font-extrabold tabular-nums">{progress.gems}</span>
+                <span className="text-sm font-extrabold tabular-nums">{formatCompactNumber(progress.gems)}</span>
               </div>
               <button
                 onClick={handleClaimAdGems}
@@ -394,7 +395,7 @@ function GameContent() {
                       borderColor: active ? `${theme.colors.accent}cc` : `${theme.colors.text}3f`,
                       ...(active ? { ringColor: theme.colors.accent } : {}),
                     }}
-                    title={hasStock ? `${id} x${count}` : `${cost} gems`}
+                    title={hasStock ? `${id} x${formatNumber(count)}` : `${formatNumber(cost)} gems`}
                   >
                     {POWERUP_MAP[id]}
                     {count > 0 ? (

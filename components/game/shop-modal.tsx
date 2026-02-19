@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePlayer } from '@/context/player-context';
 import { THEMES, POWERUPS, BG_IMAGES } from '@/utils/game-data';
+import { formatCompactNumber } from '@/utils/number-format';
 import { Gem, Check, Lock, Paintbrush, Zap, Image as ImageIcon, ShoppingBag, PlayCircle } from 'lucide-react';
 
 interface ShopModalProps { isOpen: boolean; onClose: () => void; }
@@ -44,13 +45,18 @@ export function ShopModal({ isOpen, onClose }: ShopModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[85dvh] overflow-hidden flex flex-col bg-[#141418] border-[#27272a] text-[#e4e4e7]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2"><ShoppingBag className="w-4 h-4" /> Shop</DialogTitle>
+      <DialogContent className="max-w-md max-h-[88dvh] overflow-hidden flex flex-col border-[#2a3550] bg-[radial-gradient(120%_100%_at_0%_0%,#1a2440_0%,#0b1328_55%,#091025_100%)] text-[#eef4ff] shadow-[0_24px_80px_rgba(0,8,28,0.65)]">
+        <DialogHeader className="pr-11">
+          <DialogTitle className="flex items-center gap-2 text-[1.1rem] font-bold">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/18 border border-cyan-400/35">
+              <ShoppingBag className="w-4 h-4 text-cyan-300" />
+            </span>
+            Shop
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="flex gap-3 p-2.5 rounded-lg bg-[#1a1a22]">
-          <div className="flex items-center gap-1.5"><Gem className="w-3.5 h-3.5 text-cyan-400" /><span className="font-bold text-sm">{progress.gems}</span></div>
+        <div className="flex gap-3 p-2.5 rounded-xl bg-white/8 border border-white/12">
+          <div className="flex items-center gap-1.5"><Gem className="w-3.5 h-3.5 text-cyan-400" /><span className="font-bold text-sm">{formatCompactNumber(progress.gems)}</span></div>
           <button
             onClick={handleClaimAdGems}
             disabled={isClaimingAd || !adsEnabled}
@@ -65,10 +71,10 @@ export function ShopModal({ isOpen, onClose }: ShopModalProps) {
         </div>
 
         <Tabs value={tab} onValueChange={setTab} className="flex-1 overflow-hidden flex flex-col">
-          <TabsList className="grid w-full grid-cols-3 bg-[#141924] border border-[#2a3247]">
-            <TabsTrigger value="themes" className="text-xs text-[#aab3c5] hover:text-[#d8e0ef] data-[state=active]:bg-[#2a3247] data-[state=active]:text-[#f8fbff] data-[state=active]:shadow-none"><Paintbrush className="w-3 h-3 mr-1" />Themes</TabsTrigger>
-            <TabsTrigger value="backgrounds" className="text-xs text-[#aab3c5] hover:text-[#d8e0ef] data-[state=active]:bg-[#2a3247] data-[state=active]:text-[#f8fbff] data-[state=active]:shadow-none"><ImageIcon className="w-3 h-3 mr-1" />Wallpaper</TabsTrigger>
-            <TabsTrigger value="powerups" className="text-xs text-[#aab3c5] hover:text-[#d8e0ef] data-[state=active]:bg-[#2a3247] data-[state=active]:text-[#f8fbff] data-[state=active]:shadow-none"><Zap className="w-3 h-3 mr-1" />Powerups</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 bg-white/6 border border-white/12">
+            <TabsTrigger value="themes" className="text-xs text-white/70 hover:text-white data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-100 data-[state=active]:shadow-none"><Paintbrush className="w-3 h-3 mr-1" />Themes</TabsTrigger>
+            <TabsTrigger value="backgrounds" className="text-xs text-white/70 hover:text-white data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-100 data-[state=active]:shadow-none"><ImageIcon className="w-3 h-3 mr-1" />Wallpaper</TabsTrigger>
+            <TabsTrigger value="powerups" className="text-xs text-white/70 hover:text-white data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-100 data-[state=active]:shadow-none"><Zap className="w-3 h-3 mr-1" />Powerups</TabsTrigger>
           </TabsList>
 
           {/* Themes */}
@@ -76,7 +82,7 @@ export function ShopModal({ isOpen, onClose }: ShopModalProps) {
             {THEMES.map((t) => {
               const s = themeStatus(t);
               return (
-                <div key={t.id} className={`flex items-center gap-3 p-3 rounded-lg border transition ${s === 'equipped' ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-[#27272a] bg-[#1a1a22]'} ${s === 'locked' || s === 'expensive' ? 'opacity-50' : ''}`}>
+                <div key={t.id} className={`flex items-center gap-3 p-3 rounded-xl border transition ${s === 'equipped' ? 'border-emerald-400/45 bg-emerald-500/10' : 'border-white/12 bg-[#151d34]/95'} ${s === 'locked' || s === 'expensive' ? 'opacity-50' : ''}`}>
                   <div className="w-11 h-11 rounded-lg grid grid-cols-2 gap-0.5 p-1 shrink-0" style={{ backgroundColor: t.colors.gridBg }}>
                     {[2, 4, 8, 16].map(v => (
                       <div key={v} className="rounded-sm flex items-center justify-center text-[5px] font-bold" style={{ backgroundColor: t.blockColors[v]?.bg, color: t.blockColors[v]?.text }}>{v}</div>
@@ -84,12 +90,12 @@ export function ShopModal({ isOpen, onClose }: ShopModalProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm">{t.name}</p>
-                    {s === 'locked' && t.unlockLevel && <p className="text-[10px] opacity-40">Lv.{t.unlockLevel}</p>}
+                    {s === 'locked' && t.unlockLevel && <p className="text-[10px] text-white/45">Lv.{t.unlockLevel}</p>}
                   </div>
                   {s === 'equipped' ? <Check className="w-4 h-4 text-emerald-400" /> :
                    s === 'owned' ? <button onClick={() => equipTheme(t.id)} className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20">Equip</button> :
                    s === 'locked' ? <Lock className="w-4 h-4 opacity-40" /> :
-                   <button onClick={() => handleBuyTheme(t.id)} className="flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#f59e0b] text-[#101014] hover:bg-[#fbbf24]"><Gem className="w-3 h-3" />{t.price}</button>}
+                   <button onClick={() => handleBuyTheme(t.id)} className="flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#f59e0b] text-[#101014] hover:bg-[#fbbf24]"><Gem className="w-3 h-3" />{formatCompactNumber(t.price)}</button>}
                 </div>
               );
             })}
@@ -100,7 +106,7 @@ export function ShopModal({ isOpen, onClose }: ShopModalProps) {
             {BG_IMAGES.filter(b => b.id !== 'custom').map((b) => {
               const s = bgStatus(b);
               return (
-                <div key={b.id} className={`flex items-center gap-3 p-3 rounded-lg border transition ${s === 'equipped' ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-[#27272a] bg-[#1a1a22]'} ${s === 'locked' || s === 'expensive' ? 'opacity-50' : ''}`}>
+                <div key={b.id} className={`flex items-center gap-3 p-3 rounded-xl border transition ${s === 'equipped' ? 'border-emerald-400/45 bg-emerald-500/10' : 'border-white/12 bg-[#151d34]/95'} ${s === 'locked' || s === 'expensive' ? 'opacity-50' : ''}`}>
                   <div className="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-[#27272a]">
                     {b.url ? (
                       <Image src={b.url} alt={b.name} width={44} height={44} className="w-full h-full object-cover" unoptimized />
@@ -110,12 +116,12 @@ export function ShopModal({ isOpen, onClose }: ShopModalProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm">{b.name}</p>
-                    {s === 'locked' && b.unlockLevel && <p className="text-[10px] opacity-40">Lv.{b.unlockLevel}</p>}
+                    {s === 'locked' && b.unlockLevel && <p className="text-[10px] text-white/45">Lv.{b.unlockLevel}</p>}
                   </div>
                   {s === 'equipped' ? <Check className="w-4 h-4 text-emerald-400" /> :
                    s === 'owned' ? <button onClick={() => equipBgImage(b.id)} className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20">Use</button> :
                    s === 'locked' ? <Lock className="w-4 h-4 opacity-40" /> :
-                  <button onClick={() => handleBuyBg(b.id)} className="flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#f59e0b] text-[#101014] hover:bg-[#fbbf24]"><Gem className="w-3 h-3" />{b.price}</button>}
+                  <button onClick={() => handleBuyBg(b.id)} className="flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#f59e0b] text-[#101014] hover:bg-[#fbbf24]"><Gem className="w-3 h-3" />{formatCompactNumber(b.price)}</button>}
                 </div>
               );
             })}
@@ -127,7 +133,7 @@ export function ShopModal({ isOpen, onClose }: ShopModalProps) {
               const owned = progress.powerups[p.id] || 0;
               const canAfford = isDev || progress.gems >= p.price;
               return (
-                <div key={p.id} className="flex items-center gap-3 p-3 rounded-lg border border-[#27272a] bg-[#1a1a22]">
+                <div key={p.id} className="flex items-center gap-3 p-3 rounded-xl border border-white/12 bg-[#151d34]/95">
                   <div className="w-11 h-11 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${THEMES[0].colors.accent}20` }}>
                     <Zap className="w-5 h-5" style={{ color: THEMES[0].colors.accent }} />
                   </div>
@@ -136,9 +142,9 @@ export function ShopModal({ isOpen, onClose }: ShopModalProps) {
                       <p className="font-semibold text-sm">{p.name}</p>
                       {owned > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white/10">x{owned}</span>}
                     </div>
-                    <p className="text-[10px] opacity-40">{p.description}</p>
+                    <p className="text-[10px] text-white/45">{p.description}</p>
                   </div>
-                  <button onClick={() => handleBuyPowerup(p.id, p.price)} disabled={!canAfford} className="flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#f59e0b] text-[#101014] hover:bg-[#fbbf24] disabled:opacity-30"><Gem className="w-3 h-3" />{p.price}</button>
+                  <button onClick={() => handleBuyPowerup(p.id, p.price)} disabled={!canAfford} className="flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#f59e0b] text-[#101014] hover:bg-[#fbbf24] disabled:opacity-30"><Gem className="w-3 h-3" />{formatCompactNumber(p.price)}</button>
                 </div>
               );
             })}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">2048 Number Game</string>
+    <string name="title_activity_main">2048 Number Game: Merge Blocks</string>
+    <string name="package_name">com.onthelisttechtz.merge2048</string>
+    <string name="custom_url_scheme">com.onthelisttechtz.merge2048</string>
+</resources>

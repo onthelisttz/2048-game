@@ -25,3 +25,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# android signing secrets
+/android/*.jks
+/android/keystore.properties
+/android/signing-info.txt

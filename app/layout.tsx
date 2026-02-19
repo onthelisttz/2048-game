@@ -21,7 +21,7 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: 'Blocks 2048 - Merge Puzzle Game',
-  description: 'A satisfying physics-based merge puzzle game. Drop blocks, match numbers, and reach 2048!',
+  description: 'A satisfying physics-based merge  puzzle game. Drop blocks, match numbers, and reach 2048!',
   icons: {
     icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
     shortcut: '/icon.svg',

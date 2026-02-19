@@ -131,7 +131,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const lastSnapshotRef = useRef<GameSnapshot | null>(null);
   const lastDropSignatureRef = useRef<{ col: number; value: number; at: number } | null>(null);
 
-  const { playSound, vibrate } = useSound(settings.soundEnabled);
+  const { playSound, vibrate, forceVibrate } = useSound(settings.soundEnabled, settings.vibrationEnabled);
 
   const syncSpawnHistory = useCallback((value: number) => {
     spawnHistoryRef.current = { last: value, streak: 1 };
@@ -782,11 +782,17 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [bestScore, playSound, syncSpawnHistory]);
 
   const toggleSettings = useCallback((key: keyof Settings) => {
-    setSettings((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  }, [setSettings]);
+    setSettings((prev) => {
+      const nextValue = !prev[key];
+      if (key === 'vibrationEnabled' && nextValue) {
+        forceVibrate(60);
+      }
+      return {
+        ...prev,
+        [key]: nextValue,
+      };
+    });
+  }, [setSettings, forceVibrate]);
 
   // Powerup handling
   const usePowerup = useCallback((powerupId: string) => {

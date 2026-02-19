@@ -4,6 +4,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Gem, Star, ArrowRight, PlayCircle } from 'lucide-react';
 import { getLevelConfig } from '@/utils/game-data';
+import { formatCompactNumber } from '@/utils/number-format';
 
 interface LevelCompleteModalProps {
   isOpen: boolean;
@@ -36,12 +37,12 @@ export function LevelCompleteModal({
     <Dialog open={isOpen}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-xs bg-[#141418] border-[#27272a] text-[#e4e4e7] text-center"
+        className="max-w-sm border-[#2a3550] bg-[radial-gradient(120%_100%_at_0%_0%,#1a2440_0%,#0b1328_55%,#091025_100%)] text-[#eef4ff] text-center shadow-[0_24px_80px_rgba(0,8,28,0.65)]"
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
-        <div className="py-3">
-          <p className="text-sm opacity-40 mb-1">Level {level}</p>
+        <div className="py-2">
+          <p className="text-sm text-white/50 mb-1">Level {level}</p>
           <h2 className="text-3xl font-black text-[#f59e0b]">COMPLETE!</h2>
         </div>
 
@@ -51,16 +52,16 @@ export function LevelCompleteModal({
           ))}
         </div>
 
-        <div className="bg-[#1a1a22] rounded-xl p-3 text-center">
-          <span className="text-[10px] uppercase tracking-wider opacity-40">Score</span>
-          <p className="text-2xl font-black tabular-nums">{score.toLocaleString()}</p>
-          <p className="text-[10px] opacity-30 mt-0.5">Target: {cfg.targetScore.toLocaleString()}</p>
+        <div className="bg-white/8 border border-white/12 rounded-2xl p-3 text-center">
+          <span className="text-[10px] uppercase tracking-wider text-white/45">Score</span>
+          <p className="text-2xl font-black tabular-nums">{formatCompactNumber(score)}</p>
+          <p className="text-[10px] text-white/35 mt-0.5">Target: {formatCompactNumber(cfg.targetScore)}</p>
         </div>
 
-        <div className="bg-[#1a1a22] rounded-lg p-2.5 flex justify-center mt-2">
+        <div className="bg-white/8 border border-white/12 rounded-xl p-2.5 flex justify-center mt-2">
           <div className="flex items-center gap-1.5">
             <Gem className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="font-bold text-sm">+{totalReward}</span>
+            <span className="font-bold text-sm">+{formatCompactNumber(totalReward)}</span>
             {rewardMultiplier === 2 && (
               <span className="rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300">x2</span>
             )}
@@ -72,10 +73,10 @@ export function LevelCompleteModal({
             onClick={onClaimRewardBoost}
             disabled={!adsEnabled || isClaimingRewardAd}
             variant="outline"
-            className="mt-2 border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/15 disabled:opacity-40 bg-transparent"
+            className="mt-2 border-cyan-500/45 text-cyan-300 hover:bg-cyan-500/15 disabled:opacity-40 bg-transparent"
           >
             <PlayCircle className="w-4 h-4 mr-1.5" />
-            {isClaimingRewardAd ? 'Loading ad...' : `Watch Ad to x2 (+${baseGemsReward})`}
+            {isClaimingRewardAd ? 'Loading ad...' : `Watch Ad to x2 (+${formatCompactNumber(baseGemsReward)})`}
           </Button>
         ) : (
           <p className="mt-2 text-[11px] font-semibold text-emerald-300">Reward boosted.</p>

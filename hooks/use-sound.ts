@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useRef, useEffect } from 'react';
+import { Haptics } from '@capacitor/haptics';
 
 type SoundType = 'drop' | 'merge' | 'gameOver' | 'click';
 
@@ -27,7 +28,7 @@ const createOscillator = (
   oscillator.stop(audioContext.currentTime + duration);
 };
 
-export function useSound(enabled: boolean) {
+export function useSound(soundEnabled: boolean, vibrationEnabled: boolean = soundEnabled) {
   const audioContextRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export function useSound(enabled: boolean) {
   }, []);
 
   const playSound = useCallback((type: SoundType, value?: number) => {
-    if (!enabled) return;
+    if (!soundEnabled) return;
     
     try {
       const ctx = getAudioContext();
@@ -74,13 +75,49 @@ export function useSound(enabled: boolean) {
     } catch (error) {
       console.log('[v0] Sound error:', error);
     }
-  }, [enabled, getAudioContext]);
+  }, [soundEnabled, getAudioContext]);
+
+  const triggerVibration = useCallback((pattern: number | number[]) => {
+    const trigger = async () => {
+      try {
+        if (Array.isArray(pattern)) {
+          // pattern = [vibrate, pause, vibrate, ...]
+          for (let i = 0; i < pattern.length; i += 2) {
+            const pulse = Math.max(0, pattern[i] || 0);
+            const pause = Math.max(0, pattern[i + 1] || 0);
+            if (pulse > 0) {
+              await Haptics.vibrate({ duration: Math.min(500, Math.max(20, pulse)) });
+            }
+            if (pause > 0) {
+              await new Promise((resolve) => setTimeout(resolve, pause));
+            }
+          }
+        } else {
+          const duration = Math.min(500, Math.max(20, pattern));
+          await Haptics.vibrate({ duration });
+        }
+      } catch {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate(pattern);
+        }
+      }
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        // Keep WebView fallback for devices where native haptics silently no-op.
+        navigator.vibrate(pattern);
+      }
+    };
+
+    void trigger();
+  }, []);
 
   const vibrate = useCallback((pattern: number | number[]) => {
-    if (enabled && navigator.vibrate) {
-      navigator.vibrate(pattern);
-    }
-  }, [enabled]);
+    if (!vibrationEnabled) return;
+    triggerVibration(pattern);
+  }, [vibrationEnabled, triggerVibration]);
 
-  return { playSound, vibrate };
+  const forceVibrate = useCallback((pattern: number | number[]) => {
+    triggerVibration(pattern);
+  }, [triggerVibration]);
+
+  return { playSound, vibrate, forceVibrate };
 }

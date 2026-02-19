@@ -91,6 +91,36 @@ export const BG_IMAGES: BgImage[] = [
 
 export const THEMES: Theme[] = [
   {
+    id: 'logo',
+    name: 'Logo',
+    price: 0,
+    currency: 'gems',
+    colors: {
+      bg: '#0f172a',
+      gridBg: '#0a101e',
+      cellBg: 'rgba(148,163,184,0.1)',
+      cellEmpty: 'rgba(148,163,184,0.06)',
+      text: '#f1f5f9',
+      accent: '#3b82f6',
+      danger: 'rgba(239,68,68,0.28)',
+      uiBg: 'rgba(15,23,42,0.9)',
+      uiText: '#f1f5f9',
+    },
+    blockColors: {
+      2: { bg: '#06b6d4', text: '#ffffff' },
+      4: { bg: '#3b82f6', text: '#ffffff' },
+      8: { bg: '#f59e0b', text: '#ffffff' },
+      16: { bg: '#ef4444', text: '#ffffff' },
+      32: { bg: '#dc2626', text: '#ffffff' },
+      64: { bg: '#0891b2', text: '#ffffff' },
+      128: { bg: '#2563eb', text: '#ffffff' },
+      256: { bg: '#d97706', text: '#ffffff' },
+      512: { bg: '#8b5cf6', text: '#ffffff' },
+      1024: { bg: '#ec4899', text: '#ffffff' },
+      2048: { bg: '#facc15', text: '#422006' },
+    },
+  },
+  {
     id: 'obsidian',
     name: 'Obsidian',
     price: 0,

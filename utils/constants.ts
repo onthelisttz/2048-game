@@ -4,17 +4,18 @@ export const GAME_HEIGHT = 480;
 // Grid configuration - optimized for mobile
 export const GRID_COLS = 5;
 export const GRID_ROWS = 6;
-export const CELL_SIZE = 54;
-export const CELL_GAP = 6;
-export const GRID_PADDING = 10;
+export const CELL_SIZE = 62;
+export const CELL_GAP = 2;
+export const GRID_PADDING = 8;
 
 // Calculate grid dimensions
 export const GRID_WIDTH = GRID_COLS * CELL_SIZE + (GRID_COLS - 1) * CELL_GAP + GRID_PADDING * 2;
 export const GRID_HEIGHT = GRID_ROWS * CELL_SIZE + (GRID_ROWS - 1) * CELL_GAP + GRID_PADDING * 2;
+export const GRID_OFFSET_Y = 0;
 
 // Position grid at bottom center
 export const GRID_START_X = (GAME_WIDTH - GRID_WIDTH) / 2 + GRID_PADDING;
-export const GRID_START_Y = GAME_HEIGHT - GRID_HEIGHT + GRID_PADDING;
+export const GRID_START_Y = GAME_HEIGHT - GRID_HEIGHT - GRID_OFFSET_Y + GRID_PADDING;
 
 export const DROP_Y = 35;
 export const DANGER_LINE_ROW = 0; // Top row only (single danger row)
@@ -58,14 +59,14 @@ export const generateRandomValue = (): number => {
   const weights = [0.5, 0.35, 0.15];
   const random = Math.random();
   let cumulative = 0;
-  
+
   for (let i = 0; i < SPAWN_VALUES.length; i++) {
     cumulative += weights[i];
     if (random < cumulative) {
       return SPAWN_VALUES[i];
     }
   }
-  
+
   return SPAWN_VALUES[0];
 };
 
